@@ -1,7 +1,7 @@
 from PIL import Image
 import os
 
-target_size = (1080, 1080)
+target_size = (256, 256)
 
 def preprocess_image(input_path):
     image = Image.open(input_path)
@@ -9,7 +9,7 @@ def preprocess_image(input_path):
 
     if image.mode != 'RGB':
         image = image.convert('RGB')
-
+    print(f"Image" + input_path + " is processed")
     return image
 
 def preprocess_images(input_paths):

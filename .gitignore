@@ -1,3 +1,4 @@
 images.zip
 images
-_pycache_/..
+__pycache__/
+
