@@ -2,6 +2,7 @@ from preprocess import preprocess_images
 from Loader import load_dataset_styler
 from autoencoder import Autoencoder
 import numpy as np
+from keras.optimizers import Adam
 
 styler_path = r'/mnt/d/Documents/Coolyeah/DL/images/'
 exts = {".jpg", ".jpeg", ".png"}
@@ -16,8 +17,10 @@ X_train_styler = [np.array(image) for image in X_train_styler]
 
 input_dim = (256, 256, 3)
 encoding_dim = (32, 32, 128)
-
+learning_rate = 0.0001
+adam_optimizer = Adam(learning_rate=learning_rate)
 autoencoder = Autoencoder(input_dim, encoding_dim)
+autoencoder.autoencoder.compile(optimizer=adam_optimizer, loss='mean_squared_error')
 
 epochs = 32
 batch_size = 128
