@@ -1,6 +1,7 @@
 from preprocess import preprocess_images
 from Loader import load_dataset_styler
 from autoencoder import Autoencoder
+import numpy as np
 
 styler_path = r'/mnt/d/Documents/Coolyeah/DL/images/'
 exts = {".jpg", ".jpeg", ".png"}
@@ -11,10 +12,38 @@ image_paths = [path for _, class_images in X_train_styler for path in class_imag
 
 
 X_train_styler = preprocess_images(image_paths)
+X_train_styler = [np.array(image) for image in X_train_styler]
 
 input_dim = (256, 256, 3)
-encoding_dim = 256
+encoding_dim = (32, 32, 128)
 
 autoencoder = Autoencoder(input_dim, encoding_dim)
 
-autoencoder.autoencoder.fit(X_train_styler, X_train_styler, epochs=10, batch_size=128, shuffle=True)
+epochs = 10
+batch_size = 128
+
+for epoch in range(epochs):
+    print(f"Epoch {epoch + 1}/{epochs}")
+
+    total_loss = 0.0
+    num_batches = len(X_train_styler) // batch_size
+
+    for i in range(0, len(X_train_styler), batch_size):
+        batch_X = X_train_styler[i:i + batch_size]
+        batch_loss = 0
+
+        for image in batch_X:
+            # Add a batch dimension to the image
+            image = image.reshape(1, 256, 256, 3)
+
+            # Train on the image
+            loss = autoencoder.autoencoder.train_on_batch(image, image)
+            batch_loss += loss
+
+        total_loss += batch_loss / len(batch_X)
+
+    # Print the average loss for the epoch
+    average_loss = total_loss / num_batches
+    print(f"Epoch {epoch + 1} - Average Loss: {average_loss:.4f}")
+
+print("Autoencoder training completed.")
