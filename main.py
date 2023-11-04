@@ -19,7 +19,7 @@ encoding_dim = (32, 32, 128)
 
 autoencoder = Autoencoder(input_dim, encoding_dim)
 
-epochs = 10
+epochs = 32
 batch_size = 128
 
 for epoch in range(epochs):
