@@ -33,17 +33,14 @@ for epoch in range(epochs):
         batch_loss = 0
 
         for image in batch_X:
-            # Add a batch dimension to the image
             image = image.reshape(1, 256, 256, 3)
 
-            # Train on the image
             loss = autoencoder.autoencoder.train_on_batch(image, image)
             batch_loss += loss
 
         total_loss += batch_loss / len(batch_X)
 
-    # Print the average loss for the epoch
     average_loss = total_loss / num_batches
     print(f"Epoch {epoch + 1} - Average Loss: {average_loss:.4f}")
-
+autoencoder.autoencoder.save('/mnt/d/Documents/Coolyeah/DL/models/autoencoder.h5')
 print("Autoencoder training completed.")

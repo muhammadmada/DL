@@ -24,12 +24,9 @@ class Autoencoder:
 
     def build_decoder(self):
         encoded_input = Input(shape=self.encoding_dim)
-        x = Conv2DTranspose(64, (3, 3), strides=(2, 2), padding='same')(encoded_input)
-        x = Activation('relu')(x)
-        x = Conv2DTranspose(128, (3, 3), strides=(2, 2), padding='same')(x)
-        x = Activation('relu')(x)
-        x = Conv2DTranspose(256, (3, 3), strides=(2, 2), padding='same')(x)
-        x = Activation('relu')(x)
+        x = Conv2DTranspose(64, (3, 3), activation='relu', strides=(2, 2), padding='same')(encoded_input)
+        x = Conv2DTranspose(128, (3, 3), activation='relu', strides=(2, 2), padding='same')(x)
+        x = Conv2DTranspose(256, (3, 3), activation='relu', strides=(2, 2), padding='same')(x)
         decoded = Conv2DTranspose(3, (3, 3), activation='sigmoid', padding='same')(x)
         decoder = Model(inputs=encoded_input, outputs=decoded)
         return decoder
