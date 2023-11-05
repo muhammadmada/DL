@@ -1,12 +1,14 @@
 import tensorflow as tf
 from tensorflow import keras
-from keras.layers import Input,Activation, Dense, Conv2D, Conv2DTranspose, MaxPooling2D, UpSampling2D, Reshape
+from keras.layers import Input, Conv2D, Conv2DTranspose, MaxPooling2D, UpSampling2D, Reshape
 from keras.models import Model
 
 class Autoencoder:
-    def __init__(self, input_shape, encoding_dim):
+    def __init__(self, input_shape, encoding_dim, learning_rate):
         self.input_shape = input_shape
         self.encoding_dim = encoding_dim
+        self.learning_rate = learning_rate
+        self.optimizer_type = keras.optimizers.RMSprop(learning_rate=self.learning_rate)
         self.encoder = self.build_encoder()
         self.decoder = self.build_decoder()
         self.autoencoder = self.build_autoencoder()
@@ -36,5 +38,5 @@ class Autoencoder:
         encoded = self.encoder(input_layer)
         decoded = self.decoder(encoded)
         autoencoder = Model(inputs=input_layer, outputs=decoded)
-        autoencoder.compile(optimizer='adam', loss='mean_squared_error')
+        autoencoder.compile(optimizer=self.optimizer_type, loss='mean_squared_error')
         return autoencoder
