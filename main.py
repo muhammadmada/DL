@@ -15,6 +15,9 @@ image_paths = [path for _, class_images in X_train_styler for path in class_imag
 X_train_styler = preprocess_images(image_paths)
 X_train_styler = [np.array(image) for image in X_train_styler]
 
+input_shape = np.array(X_train_styler)
+print(input_shape[0].shape)
+
 input_dim = (256, 256, 3)
 encoding_dim = (32, 32, 128)
 learning_rate = 0.0001

@@ -8,7 +8,7 @@ class Autoencoder:
         self.input_shape = input_shape
         self.encoding_dim = encoding_dim
         self.learning_rate = learning_rate
-        self.optimizer_type = keras.optimizers.RMSprop(learning_rate=self.learning_rate)
+        self.optimizer_type = keras.optimizers.Adam(learning_rate=learning_rate)
         self.encoder = self.build_encoder()
         self.decoder = self.build_decoder()
         self.autoencoder = self.build_autoencoder()
@@ -16,9 +16,12 @@ class Autoencoder:
     def build_encoder(self):
         input_layer = Input(shape=self.input_shape)
         x = Conv2D(32, (3, 3), activation='relu', padding='same')(input_layer)
+        x = Conv2D(32, (3, 3), activation='relu', padding='same')(x)
         x = MaxPooling2D((2, 2), padding='same')(x)
         x = Conv2D(64, (3, 3), activation='relu', padding='same')(x)
+        x = Conv2D(64, (3, 3), activation='relu', padding='same')(x)
         x = MaxPooling2D((2, 2), padding='same')(x)
+        x = Conv2D(128, (3, 3), activation='relu', padding='same')(x)
         x = Conv2D(128, (3, 3), activation='relu', padding='same')(x)
         encoded = MaxPooling2D((2, 2), padding='same')(x)
         encoder = Model(inputs=input_layer, outputs=encoded)
