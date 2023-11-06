@@ -14,7 +14,7 @@ class Autoencoder:
         self.autoencoder = self.build_autoencoder()
 
     def build_encoder(self):
-        input_layer = Input(shape=self.input_shape)
+        input_layer = Input(shape=(self.input_shape))
         x = Conv2D(32, (3, 3), activation='relu', padding='same')(input_layer)
         x = Conv2D(32, (3, 3), activation='relu', padding='same')(x)
         x = MaxPooling2D((2, 2), padding='same')(x)
@@ -28,7 +28,7 @@ class Autoencoder:
         return encoder
 
     def build_decoder(self):
-        encoded_input = Input(shape=self.encoding_dim)
+        encoded_input = Input(shape=(self.encoding_dim))
         x = Conv2DTranspose(64, (3, 3), activation='relu', strides=(2, 2), padding='same')(encoded_input)
         x = Conv2DTranspose(128, (3, 3), activation='relu', strides=(2, 2), padding='same')(x)
         x = Conv2DTranspose(256, (3, 3), activation='relu', strides=(2, 2), padding='same')(x)

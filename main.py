@@ -32,6 +32,7 @@ custom_callback = CustomCallback()
 
 optimizer = Adam(learning_rate=learning_rate)
 autoencoder.autoencoder.compile(optimizer=optimizer, loss='mean_squared_error')
+autoencoder.autoencoder.summary()
 
 autoencoder.autoencoder.fit(X_train_styler, X_train_styler,
     batch_size=batch_size, epochs=epochs, validation_split=0.2,
