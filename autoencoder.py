@@ -1,6 +1,6 @@
 import tensorflow as tf
 from tensorflow import keras
-from keras.layers import Input, Conv2D, Conv2DTranspose, MaxPooling2D, Flatten, UpSampling2D, Dense, Reshape
+from keras.layers import Input, Conv2D, Conv2DTranspose, MaxPooling2D, Dropout
 from keras.models import Model
 
 class Autoencoder:
@@ -16,12 +16,15 @@ class Autoencoder:
     def build_encoder(self):
         input_layer = Input(shape=self.input_shape)
         x = Conv2D(32, (3, 3), activation='relu', padding='same')(input_layer)
+        x = Dropout(0.6)(x)
         x = Conv2D(32, (3, 3), activation='relu', padding='same')(x)
         x = MaxPooling2D((2, 2), padding='same')(x)
         x = Conv2D(64, (3, 3), activation='relu', padding='same')(x)
+        x = Dropout(0.6)(x)
         x = Conv2D(64, (3, 3), activation='relu', padding='same')(x)
         x = MaxPooling2D((2, 2), padding='same')(x)
         x = Conv2D(128, (3, 3), activation='relu', padding='same')(x)
+        x = Dropout(0.8)(x)
         x = Conv2D(128, (3, 3), activation='relu', padding='same')(x)
         #x = MaxPooling2D((2, 2), padding='same')(x)
         #x = Flatten()(x)
