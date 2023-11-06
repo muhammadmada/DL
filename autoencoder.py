@@ -1,6 +1,6 @@
 import tensorflow as tf
 from tensorflow import keras
-from keras.layers import Input, Conv2D, Conv2DTranspose, MaxPooling2D, UpSampling2D, Reshape
+from keras.layers import Input, Conv2D, Conv2DTranspose, MaxPooling2D, Flatten, UpSampling2D, Dense, Reshape
 from keras.models import Model
 
 class Autoencoder:
@@ -14,7 +14,7 @@ class Autoencoder:
         self.autoencoder = self.build_autoencoder()
 
     def build_encoder(self):
-        input_layer = Input(shape=(self.input_shape))
+        input_layer = Input(shape=self.input_shape)
         x = Conv2D(32, (3, 3), activation='relu', padding='same')(input_layer)
         x = Conv2D(32, (3, 3), activation='relu', padding='same')(x)
         x = MaxPooling2D((2, 2), padding='same')(x)
@@ -23,15 +23,20 @@ class Autoencoder:
         x = MaxPooling2D((2, 2), padding='same')(x)
         x = Conv2D(128, (3, 3), activation='relu', padding='same')(x)
         x = Conv2D(128, (3, 3), activation='relu', padding='same')(x)
+        #x = MaxPooling2D((2, 2), padding='same')(x)
+        #x = Flatten()(x)
+        #encoded = Dense(512, activation='relu')(x)
         encoded = MaxPooling2D((2, 2), padding='same')(x)
         encoder = Model(inputs=input_layer, outputs=encoded)
         return encoder
 
     def build_decoder(self):
-        encoded_input = Input(shape=(self.encoding_dim))
-        x = Conv2DTranspose(64, (3, 3), activation='relu', strides=(2, 2), padding='same')(encoded_input)
+        encoded_input = Input(shape=self.encoding_dim)
+        # x = Dense(512, activation='relu')(encoded_input)
+        # x = Reshape((32, 32, 512))(x)
+        x = Conv2DTranspose(256, (3, 3), activation='relu', strides=(2, 2), padding='same')(encoded_input)
         x = Conv2DTranspose(128, (3, 3), activation='relu', strides=(2, 2), padding='same')(x)
-        x = Conv2DTranspose(256, (3, 3), activation='relu', strides=(2, 2), padding='same')(x)
+        x = Conv2DTranspose(64, (3, 3), activation='relu', strides=(2, 2), padding='same')(x)
         decoded = Conv2DTranspose(3, (3, 3), activation='sigmoid', padding='same')(x)
         decoder = Model(inputs=encoded_input, outputs=decoded)
         return decoder

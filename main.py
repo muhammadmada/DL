@@ -34,8 +34,10 @@ optimizer = Adam(learning_rate=learning_rate)
 autoencoder.autoencoder.compile(optimizer=optimizer, loss='mean_squared_error')
 autoencoder.autoencoder.summary()
 
+
+
 autoencoder.autoencoder.fit(X_train_styler, X_train_styler,
-    batch_size=batch_size, epochs=epochs, validation_split=0.2,
+    epochs=epochs, steps_per_epoch=128, validation_split=0.2,
     callbacks=custom_callback, verbose=2)
 
 autoencoder.autoencoder.save('/mnt/d/Documents/Coolyeah/DL/models/autoencoder.h5')
