@@ -4,7 +4,7 @@ from autoencoder import Autoencoder
 from Callbacks import CustomCallback
 import numpy as np
 import time
-from keras.optimizers import Adam
+from keras.optimizers import RMSprop
 
 styler_path = r'/mnt/d/Documents/Coolyeah/DL/images/'
 exts = {".jpg", ".jpeg", ".png"}
@@ -21,7 +21,7 @@ print(input_shape[0].shape)
 
 input_dim = (256, 256, 3)
 encoding_dim = (32, 32, 128)
-learning_rate = 0.001
+learning_rate = 1e-2
 
 autoencoder = Autoencoder(input_dim, encoding_dim, learning_rate)
 
@@ -32,7 +32,7 @@ steps_per_epoch = total_samples // batch_size
 
 custom_callback = CustomCallback()
 
-optimizer = Adam(learning_rate=learning_rate)
+optimizer = RMSprop(learning_rate=learning_rate, momentum=0.9)
 autoencoder.autoencoder.compile(optimizer=optimizer, loss='mean_squared_error')
 autoencoder.autoencoder.summary()
 
