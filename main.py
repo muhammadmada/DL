@@ -20,55 +20,31 @@ input_shape = np.array(X_train_styler)
 print(input_shape[0].shape)
 
 input_dim = (256, 256, 3)
-encoding_dim = (32, 32, 128)
+conv_filters = (32, 64, 64, 64)
+conv_kernels = (3, 5, 5, 3)
+conv_strides = (1, 2, 2, 1)
+latent_space_dim = 2
 learning_rate = 1e-2
 
-autoencoder = Autoencoder(input_dim, encoding_dim, learning_rate)
-
-epochs = 32
-batch_size = 64
-total_samples = len(X_train_styler)
-steps_per_epoch = total_samples // batch_size
-
-custom_callback = CustomCallback()
+autoencoder = Autoencoder(input_dim, 
+            conv_filters, conv_kernels, conv_strides, 
+            latent_space_dim, learning_rate)
 
 optimizer = RMSprop(learning_rate=learning_rate, momentum=0.9)
-autoencoder.autoencoder.compile(optimizer=optimizer, loss='mean_squared_error')
-autoencoder.autoencoder.summary()
+autoencoder.compile(optimizer=optimizer, loss='mean_squared_error')
+autoencoder.summary()
 
-total_samples = len(X_train_styler)
-steps_per_epoch = total_samples // batch_size
-
-for epoch in range(epochs):
-    start_time = time.time()
-    
-    for step in range(steps_per_epoch):
-        batch_start = step * batch_size
-        batch_end = (step + 1) * batch_size
-        x_batch = X_train_styler[batch_start:batch_end]
-        
-        # Assuming your images are already loaded as numpy arrays
-        x_batch = np.array(x_batch)
-        
-        # Ensure the shape matches the expected input shape (256, 256, 3)
-        x_batch = x_batch.reshape((-1, 256, 256, 3))
-        
-        loss = autoencoder.autoencoder.train_on_batch(x_batch, x_batch)
-        
-        print(f"Epoch {epoch + 1}/{epochs} - Step {step + 1}/{steps_per_epoch} - Loss: {loss:.4f}", end='\r')
-
-    end_time = time.time()
-    time_per_epoch = end_time - start_time
-    iter_per_second = steps_per_epoch / time_per_epoch
-
-    print(f"Epoch {epoch + 1}/{epochs} - Step {steps_per_epoch}/{steps_per_epoch} - Loss: {loss:.4f} - {iter_per_second:.2f} iter/s")
-
-# autoencoder.autoencoder.fit(X_train_styler, X_train_styler,
-#    epochs=epochs, steps_per_epoch=128,max_queue_size=100,
-#    callbacks=custom_callback, verbose=1)
+epochs = 10
+batch_size = 16
+custom_callback = CustomCallback()
 
 
+autoencoder.train(X_train_styler,batch_size=batch_size,num_epochs=epochs,
+                  callbacks=custom_callback, verbose=1)
+#autoencoder.train_on_batch(x_train=X_train_styler, epochs = epochs,
+#                           batch_size = batch_size)
 
-autoencoder.autoencoder.save('/mnt/d/Documents/Coolyeah/DL/models/autoencoder.h5')
+
+autoencoder.autoencoder.save(f'/mnt/d/Documents/Coolyeah/DL/models/autoencoder.{int(time.time())}.h5')
 
 print("Autoencoder training completed.")
