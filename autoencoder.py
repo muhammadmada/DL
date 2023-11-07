@@ -49,17 +49,27 @@ class Autoencoder:
         self.model.fit(x_train,
                        x_train,
                        batch_size=batch_size,
-                       epochs=num_epochs,
+                       epochs=num_epochs, max_queue_size=16,
                        shuffle=True,
                        callbacks= callbacks,
                        verbose = verbose)
 
     def train_on_batch(self, x_train, epochs, batch_size):
+        num_samples = len(x_train)
+        batches_per_epoch = num_samples // batch_size
+
         for epoch in range(epochs):
-            for start_idx in range(0, len(x_train), batch_size):
-                batch_x = x_train[start_idx:start_idx + batch_size]
-                self.model.train_on_batch(batch_x)
-                print("Epoch no: {}/{} - Batch no: {}/{}".format(epoch + 1, epochs, (start_idx // batch_size) + 1, len(x_train) // batch_size))
+            print(f"Epoch {epoch + 1}/{epochs}")
+        
+            for batch_index in range(batches_per_epoch):
+                start_idx = batch_index * batch_size
+                end_idx = start_idx + batch_size
+                batch_x = x_train[start_idx:end_idx]
+            
+                loss = self.model.fit(batch_x, batch_size=len(batch_x))
+            
+                print(f"Batch {batch_index + 1}/{batches_per_epoch} - Loss: {loss:.4f}")
+
 
 
     def _build(self):

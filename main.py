@@ -34,8 +34,8 @@ optimizer = RMSprop(learning_rate=learning_rate, momentum=0.9)
 autoencoder.compile(optimizer=optimizer, loss='mean_squared_error')
 autoencoder.summary()
 
-epochs = 10
-batch_size = 16
+epochs = 2
+batch_size = 4
 custom_callback = CustomCallback()
 
 
