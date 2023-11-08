@@ -46,8 +46,8 @@ autoencoder.train(X_train_styler, X_train_styler,
 #                           batch_size = batch_size)
 
 time_now = time.localtime()
-time_now = time.strftime("%d_%m_%y_%H_%M_%S",time_now)
+time_now = time.strftime("%d_%m_%y-%H_%M_%S",time_now)
 
-autoencoder.save(f'/mnt/d/Documents/Coolyeah/DL/models/autoencoder_'+ time_now +'.keras')
+autoencoder.save(f'/mnt/d/Documents/Coolyeah/DL/models/autoencoder-'+ time_now +'-'+ str(epochs) +'.keras')
 
 print("Autoencoder training completed.")

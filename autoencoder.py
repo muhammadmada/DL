@@ -1,7 +1,7 @@
 from tensorflow import keras 
 from keras import Model
-from keras.layers import Input, Conv2D, ReLU, BatchNormalization, \
-    Flatten, Dense, Reshape, Conv2DTranspose, Activation
+from keras.layers import Input, Conv2D, ReLU,\
+    Flatten, Dense, Reshape, Conv2DTranspose, UpSampling2D
 from keras import backend
 from keras.optimizers import Adam
 from keras.losses import MeanSquaredError
@@ -89,11 +89,15 @@ class Autoencoder:
         dense_layer = self._add_dense_layer(decoder_input)
         reshape_layer = self._add_reshape_layer(dense_layer)
         conv_transpose_layers = self._add_conv_transpose_layers(reshape_layer)
+        #upsampling2d_layer = self._add_upsampling2d_layer(conv_transpose_layers)
         decoder_output = self._add_decoder_output(conv_transpose_layers)
         self.decoder = Model(decoder_input, decoder_output, name="decoder")
 
     def _add_decoder_input(self):
         return Input(shape=self.latent_space_dim, name="decoder_input")
+
+    def _add_upsampling2d_layer(self, conv_transpose_layer):
+        return UpSampling2D((2, 2), interpolation='nearest', name='Upsampling2D')(conv_transpose_layer)
 
     def _add_dense_layer(self, decoder_input):
         num_neurons = np.prod(self._shape_before_bottleneck) # [1, 2, 4] -> 8
@@ -122,19 +126,18 @@ class Autoencoder:
         )
         x = conv_transpose_layer(x)
         x = ReLU(name=f"decoder_relu_{layer_num}")(x)
-        x = BatchNormalization(name=f"decoder_bn_{layer_num}")(x)
         return x
 
     def _add_decoder_output(self, x):
         conv_transpose_layer = Conv2DTranspose(
-            filters=1,
+            filters=3,
             kernel_size=self.conv_kernels[0],
             strides=self.conv_strides[0],
             padding="same",
             name=f"decoder_conv_transpose_layer_{self._num_conv_layers}"
         )
-        x = conv_transpose_layer(x)
-        output_layer = Activation("sigmoid", name="sigmoid_layer")(x)
+        #x = UpSampling2D((2, 2), interpolation='gaussian', name="Upsampling2D_out")(x)
+        output_layer = conv_transpose_layer(x)
         return output_layer
 
     def _build_encoder(self):
@@ -168,7 +171,6 @@ class Autoencoder:
         )
         x = conv_layer(x)
         x = ReLU(name=f"encoder_relu_{layer_number}")(x)
-        x = BatchNormalization(name=f"encoder_bn_{layer_number}")(x)
         return x
 
     def _add_bottleneck(self, x):
