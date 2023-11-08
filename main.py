@@ -34,8 +34,8 @@ optimizer = RMSprop(learning_rate=learning_rate, momentum=0.9)
 autoencoder.compile(optimizer=optimizer, loss='mean_squared_error')
 autoencoder.summary()
 
-epochs = 8
-batch_size = 128
+epochs = 32
+batch_size = 256
 custom_callback = CustomCallback()
 
 
@@ -45,7 +45,9 @@ autoencoder.train(X_train_styler, X_train_styler,
 #autoencoder.train_on_batch(x_train=X_train_styler, epochs = epochs,
 #                           batch_size = batch_size)
 
+time_now = time.localtime()
+time_now = time.strftime("%d_%m_%y_%H_%M_%S",time_now)
 
-autoencoder.save(f'/mnt/d/Documents/Coolyeah/DL/models/autoencoder.{int(time.time())}.h5')
+autoencoder.save(f'/mnt/d/Documents/Coolyeah/DL/models/autoencoder_'+ time_now +'.keras')
 
 print("Autoencoder training completed.")
