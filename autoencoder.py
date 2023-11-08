@@ -45,10 +45,10 @@ class Autoencoder:
     def compile(self, optimizer, loss):
         self.model.compile(optimizer=optimizer, loss = loss)
 
-    def train(self, x_train, batch_size, num_epochs, callbacks, verbose):
+    def train(self, x_train, y_train, batch_size, num_epochs, callbacks, verbose):
         self.model.fit(x_train,
-                       x_train,
-                       batch_size=batch_size,
+                       y_train,
+                       batch_size,
                        epochs=num_epochs, max_queue_size=16,
                        shuffle=True,
                        callbacks= callbacks,
@@ -70,7 +70,9 @@ class Autoencoder:
             
                 print(f"Batch {batch_index + 1}/{batches_per_epoch} - Loss: {loss:.4f}")
 
-
+    def save(self, path):
+        self.model.save(path)
+        print("Model: "+ path +" saved successfully")
 
     def _build(self):
         self._build_encoder()

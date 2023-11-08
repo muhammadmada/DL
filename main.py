@@ -14,12 +14,12 @@ X_train_styler = load_dataset_styler(styler_path, exts)
 image_paths = [path for _, class_images in X_train_styler for path in class_images]
 
 X_train_styler = preprocess_images(image_paths)
-X_train_styler = [np.array(image) for image in X_train_styler]
+X_train_styler = np.array(X_train_styler)
 
-input_shape = np.array(X_train_styler)
-print(input_shape[0].shape)
+print(X_train_styler[0].shape)
+print(X_train_styler.shape)
 
-input_dim = (256, 256, 3)
+input_dim = (128, 128, 3)
 conv_filters = (32, 64, 64, 64)
 conv_kernels = (3, 5, 5, 3)
 conv_strides = (1, 2, 2, 1)
@@ -34,17 +34,18 @@ optimizer = RMSprop(learning_rate=learning_rate, momentum=0.9)
 autoencoder.compile(optimizer=optimizer, loss='mean_squared_error')
 autoencoder.summary()
 
-epochs = 2
-batch_size = 4
+epochs = 8
+batch_size = 128
 custom_callback = CustomCallback()
 
 
-autoencoder.train(X_train_styler,batch_size=batch_size,num_epochs=epochs,
-                  callbacks=custom_callback, verbose=1)
+autoencoder.train(X_train_styler, X_train_styler, 
+                  batch_size=batch_size,num_epochs=epochs,
+                  callbacks= None, verbose=1)
 #autoencoder.train_on_batch(x_train=X_train_styler, epochs = epochs,
 #                           batch_size = batch_size)
 
 
-autoencoder.autoencoder.save(f'/mnt/d/Documents/Coolyeah/DL/models/autoencoder.{int(time.time())}.h5')
+autoencoder.save(f'/mnt/d/Documents/Coolyeah/DL/models/autoencoder.{int(time.time())}.h5')
 
 print("Autoencoder training completed.")

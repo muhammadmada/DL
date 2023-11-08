@@ -1,7 +1,7 @@
 from PIL import Image
 import os
 
-target_size = (256, 256)
+target_size = (128, 128)
 
 def preprocess_image(input_path):
     image = Image.open(input_path)
