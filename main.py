@@ -20,10 +20,10 @@ print(X_train_styler[0].shape)
 print(X_train_styler.shape)
 
 input_dim = (128, 128, 3)
-conv_filters = (32, 64, 64, 64)
+conv_filters = (2, 16, 64, 128)
 conv_kernels = (3, 5, 5, 3)
 conv_strides = (1, 2, 2, 1)
-latent_space_dim = 2
+latent_space_dim = 16
 learning_rate = 1e-2
 
 autoencoder = Autoencoder(input_dim, 
@@ -34,7 +34,7 @@ optimizer = RMSprop(learning_rate=learning_rate, momentum=0.9)
 autoencoder.compile(optimizer=optimizer, loss='mean_squared_error')
 autoencoder.summary()
 
-epochs = 32
+epochs = 128
 batch_size = 256
 custom_callback = CustomCallback()
 
@@ -48,6 +48,6 @@ autoencoder.train(X_train_styler, X_train_styler,
 time_now = time.localtime()
 time_now = time.strftime("%d_%m_%y-%H_%M_%S",time_now)
 
-autoencoder.save(f'/mnt/d/Documents/Coolyeah/DL/models/autoencoder-'+ time_now +'-'+ str(epochs) +'.keras')
+autoencoder.save(f'/mnt/d/Documents/Coolyeah/DL/models/autoencoder-'+ time_now +'-'+ str(epochs) +'-' + str(latent_space_dim) +'.keras')
 
 print("Autoencoder training completed.")

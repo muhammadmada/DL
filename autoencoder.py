@@ -183,11 +183,11 @@ class Autoencoder:
 
 if __name__ == "__main__":
     autoencoder = Autoencoder(
-        input_shape=(256, 256, 3),
+        input_shape=(128, 128, 3),
         conv_filters=(32, 64, 64, 64),
         conv_kernels=(3, 3, 3, 3),
         conv_strides=(1, 2, 2, 1),
-        latent_space_dim=2,
+        latent_space_dim=64,
         learning_rate=1e-2
     )
     autoencoder.summary()
