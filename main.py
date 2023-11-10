@@ -4,7 +4,7 @@ from autoencoder import Autoencoder
 from Callbacks import CustomCallback
 import numpy as np
 import time
-from keras.optimizers import RMSprop
+from keras.optimizers import Adam
 
 styler_path = r'/mnt/d/Documents/Coolyeah/DL/images/'
 exts = {".jpg", ".jpeg", ".png"}
@@ -23,18 +23,18 @@ input_dim = (128, 128, 3)
 conv_filters = (2, 16, 64, 128)
 conv_kernels = (3, 5, 5, 3)
 conv_strides = (1, 2, 2, 1)
-latent_space_dim = 16
-learning_rate = 1e-2
+latent_space_dim = 256
+learning_rate = 1e-4
 
 autoencoder = Autoencoder(input_dim, 
             conv_filters, conv_kernels, conv_strides, 
             latent_space_dim, learning_rate)
 
-optimizer = RMSprop(learning_rate=learning_rate, momentum=0.9)
+optimizer = Adam(learning_rate=learning_rate)
 autoencoder.compile(optimizer=optimizer, loss='mean_squared_error')
 autoencoder.summary()
 
-epochs = 128
+epochs = 1024
 batch_size = 256
 custom_callback = CustomCallback()
 

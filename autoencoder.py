@@ -94,14 +94,14 @@ class Autoencoder:
         self.decoder = Model(decoder_input, decoder_output, name="decoder")
 
     def _add_decoder_input(self):
-        return Input(shape=self.latent_space_dim, name="decoder_input")
+        return Input(shape=(self.latent_space_dim,), name="decoder_input")
 
     def _add_upsampling2d_layer(self, conv_transpose_layer):
         return UpSampling2D((2, 2), interpolation='nearest', name='Upsampling2D')(conv_transpose_layer)
 
     def _add_dense_layer(self, decoder_input):
         num_neurons = np.prod(self._shape_before_bottleneck) # [1, 2, 4] -> 8
-        dense_layer = Dense(num_neurons, name="decoder_dense")(decoder_input)
+        dense_layer = Dense(units=num_neurons, name="decoder_dense", activation='sigmoid')(decoder_input)
         return dense_layer
 
     def _add_reshape_layer(self, dense_layer):
@@ -177,7 +177,7 @@ class Autoencoder:
         """Flatten data and add bottleneck (Dense layer)."""
         self._shape_before_bottleneck = backend.int_shape(x)[1:]
         x = Flatten()(x)
-        x = Dense(self.latent_space_dim, name="encoder_output")(x)
+        x = Dense(units = self.latent_space_dim, name="encoder_output")(x)
         return x
 
 
@@ -187,7 +187,7 @@ if __name__ == "__main__":
         conv_filters=(32, 64, 64, 64),
         conv_kernels=(3, 3, 3, 3),
         conv_strides=(1, 2, 2, 1),
-        latent_space_dim=64,
+        latent_space_dim=256,
         learning_rate=1e-2
     )
     autoencoder.summary()
